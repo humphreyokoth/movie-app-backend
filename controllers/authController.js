@@ -2,9 +2,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require('dotenv').config()
 
-const { User } = require("../models/usermodel");
+const { User } = require("../models/user");
 
-async function login(req, res) {
+exports.login = async(req, res)=>{
   try {
     const user = await User.findOne({ where: { email: req.body.email } });
     console.log(user);
@@ -31,6 +31,8 @@ async function login(req, res) {
     res.status(401).send({ success: false, error: error.message });
   }
 }
-module.exports = {
-  login,
-};
+// Register a user   => /api/v1/getUser
+exports.getUser = async (req,res) =>{
+  const user = await User.findByPk(req.user.id);
+  return res.json(user);
+}

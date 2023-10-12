@@ -1,16 +1,37 @@
 const express = require("express");
 const seq = require("./db/db.connect")
 const app = express();
-const dotenv = require("dotenv");
-const route = require("./controllers/authController");
+const cors = require("cors");
+require('dotenv').config();
 
-// dotenv.config();
-// const cors = require("cors");
+
+// Import all routes
+const auth = require('./router/loginRoutes');
+
+
+
+
+
 
 
 app.use(express.json())
+app.use(cors());
 
+// Routes
+app.use('/login',auth);
+
+// Sequelize
 seq()
+
+
+// app.use('/dashboard', dashboardRoute);
+// app.use('/employee', employeeRoutes);
+// app.use('/login', loginRoutes);
+// app.use('/register', registerRoutes);
+// app.use('/registertruck', registerTruckRoutes);
+// app.use('/assigntrucks', assignTruckRoutes);
+// app.use('/earnings', earningRoutes);
+// app.use('/order', orderRoutes);
 // Setting up config file;
 if(process.env.NODE_ENV !== "PRODUCTION")
 require("dotenv").config({path:"env"})
