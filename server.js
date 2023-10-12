@@ -5,8 +5,13 @@ const cors = require("cors");
 require('dotenv').config();
 
 
+
+// swagger config
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger.json");
+
 // Import all routes
-const auth = require('./router/loginRoutes');
+const auth = require('./router/auth');
 
 
 
@@ -33,6 +38,11 @@ seq()
 // app.use('/earnings', earningRoutes);
 // app.use('/order', orderRoutes);
 // Setting up config file;
+
+// Swagger ui documentation
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
+
 if(process.env.NODE_ENV !== "PRODUCTION")
 require("dotenv").config({path:"env"})
 const port = process.env.PORT || 5000;
