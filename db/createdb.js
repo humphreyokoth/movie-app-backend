@@ -16,8 +16,7 @@ const connectDB = () => {
     pool.getConnection(function(err, connection){
        if (err) throw err
         connection.query('create database movie_app',function(err){
-            if (err) throw err
-               ;
+            if (err) throw err;
                console.log('movie_app database created') 
                process.exit();
         })

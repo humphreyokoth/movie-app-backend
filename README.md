@@ -1,5 +1,6 @@
 # movie-app-backend
-Run clone and run NPM install
-
+git clone and run npm install
+# creating database
 npm run create_db
+# starting swagger
 npm run swagger-autogen
