@@ -11,7 +11,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger.json");
 
 // Import all routes
-const auth = require('./router/auth');
+const auth = require('./routes/auth');
 
 
 
@@ -29,15 +29,7 @@ app.use('/login',auth);
 seq()
 
 
-// app.use('/dashboard', dashboardRoute);
-// app.use('/employee', employeeRoutes);
-// app.use('/login', loginRoutes);
-// app.use('/register', registerRoutes);
-// app.use('/registertruck', registerTruckRoutes);
-// app.use('/assigntrucks', assignTruckRoutes);
-// app.use('/earnings', earningRoutes);
-// app.use('/order', orderRoutes);
-// Setting up config file;
+
 
 // Swagger ui documentation
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));

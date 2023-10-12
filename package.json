@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "create_db": "node db/createdb"
+    "create_db": "node db/createdb",
+    "swagger-autogen": "node swagger.js"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
-    "sequelize-cli": "^6.6.1"
+    "sequelize-cli": "^6.6.1",
+    "swagger-autogen": "^2.23.6"
   }
 }
