@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require("./config/db.config");
+const config = require("./db/db.connect");
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(

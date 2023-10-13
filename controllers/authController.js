@@ -4,6 +4,18 @@ require('dotenv').config()
 
 const { User } = require("../models/user");
 
+
+exports.registerUser = async()=>{
+
+}
+
+
+
+
+
+
+
+
 exports.login = async(req, res)=>{
   try {
     const user = await User.findOne({ where: { email: req.body.email } });
