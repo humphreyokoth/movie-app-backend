@@ -18,12 +18,17 @@ const auth = require('./routes/auth');
 
 
 
-
-app.use(express.json())
 app.use(cors());
+// parse requests of content-type - application/json
+app.use(express.json())
+
 
 // Routes
 app.use('/login',auth);
+// 
+app.get('/',(req,res)=>{
+    res.json({message:"Movie app api's"})
+})
 
 // Sequelize
 seq()
