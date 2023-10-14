@@ -6,6 +6,30 @@ const { User } = require("../models/user");
 
 
 exports.registerUser = async()=>{
+  try {
+    const isExist = await User.findOne({
+      where:{
+        email:req.body.email
+      }
+    })
+    if(isExist){
+      return res.status(400).json({error:"Email already exists"})
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password,10)
+    const user = await User.create({
+      where: {
+        name:req.body.name,
+        email:req.body.email,
+        password:hashedPassword,
+
+      }
+    })
+    return res.json({
+    message:"Registered successfully", user 
+    })
+  } catch (error) {
+    res.status(500).send({message:error.message})
+  }
 
 }
 
@@ -40,7 +64,7 @@ exports.login = async(req, res)=>{
       throw new Error("User not found");
     }
   } catch (error) {
-    res.status(401).send({ success: false, error: error.message });
+    res.status(401).send({ message: false, error: error.message });
   }
 }
 // Register a user   => /api/v1/getUser
