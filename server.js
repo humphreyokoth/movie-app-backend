@@ -3,12 +3,13 @@ const seq = require("./db/db.connect")
 const app = express();
 const cors = require("cors");
 require('dotenv').config();
-
-
-
 // swagger config
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger.json");
+
+
+
+
 
 // Import all routes
 const auth = require('./routes/auth');
@@ -24,9 +25,10 @@ app.use(express.json())
 
 
 // Routes
-app.use('/login',auth);
+app.use('/api/v1/',auth);
+
 // 
-app.get('/',(req,res)=>{
+app.get('/api/v1/',(req,res)=>{
     res.json({message:"Movie app api's"})
 })
 

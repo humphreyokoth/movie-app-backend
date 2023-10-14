@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { Sequelize } = require('sequelize');
 // const config = require('../config');
 module.exports = (sequelize,Sequelize) => {
-    const User = sequelize.define('user',{
+    const User = sequelize.define('users',{
         id:{
             type:Sequelize.INTEGER,
             primaryKey:true,
