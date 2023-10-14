@@ -1,7 +1,7 @@
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { Sequelize } = require('sequelize');
+const Sequelize = require('sequelize');
 // const config = require('../config');
 module.exports = (sequelize,Sequelize) => {
     const User = sequelize.define('users',{
