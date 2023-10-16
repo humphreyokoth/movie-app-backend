@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config");
 const db = require("../sequelize");
-const { Unauthorized } = require("express-openapi-validator/dist/openapi.validator");
+const User = db.user;
 
-const User = db.movie_user;
+
+
 verifyToken = (req,res,next)=>{
     let token = req.headers["x-access-token"];
     if (!token) {

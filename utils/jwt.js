@@ -1,5 +1,19 @@
-const jwt = require("jsonwebtoken");
-const jwtConfig = require("../config/jwt");
+const sendToken = (user, statusCode,res) => {
 
-exports.verifyToken = ()=>jwt.verify(token,jwtConfig.secret);
-exports.createToken = ()=>jwt.sign(data,jwtConfig.secret,{expiresIn:jwtConfig.ttl});
+    // Create Jwt token
+    const token = user.getJwtToken();
+    // Options for cookie
+    const options = {
+        expires: new Date(
+            Date.now() + process.env.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true,
+    };
+    res.status(statusCode).cookie("token", token, options).json({
+        success: true,
+        token,
+        user,
+    });
+
+};
+module.exports = sendToken;

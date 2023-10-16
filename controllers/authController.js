@@ -1,57 +1,55 @@
-
 // const Op = db.Sequelize.Op;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const ErrorHandler = require("../utils/errorHandler");
 require("dotenv").config();
 const db = require("../sequelize");
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const User = db.user;
 
+exports.registerUser = catchAsyncErrors(async (req, res) => {
 
-exports.registerUser = async (req,res) => {
-  try {
-    const {name,email,password} = req.body;
+    const { name, email, password } = req.body;
     const user = await User.create({
-     name,
-     email,
-     password,
-  
+      name,
+      email,
+      password,
     });
     return res.json({
       message: "Registered successfully",
       user: user,
     });
-  } catch (error) {
-    res.status(500).send({ message: error.message });
+ 
+});
+// Login  of user
+exports.login = catchAsyncErrors(async (req, res, next) => {
+  console.log(req.body);
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new ErrorHandler("Please enter email & password", 400));
   }
-};
-// Login  of user 
-exports.login = async (req, res) => {
-  try {
-    const user = await User.findOne({ where: { email: req.body.email } });
-    console.log(user);
-    console.log(req.body.password);
-    if (user) {
-      const matchPassword = await bcrypt.compare(
-        req.body.password,
-        user.password
-      );
-      if (!matchPassword) throw new Error("Invalid credentials");
-
-      const userObj = user.toJSON();
-      delete userObj.password;
-      const payload = {
-        userId: user.id,
-      };
-      const token = jwt.sign(payload, proces.env.SECRET_KEY);
-
-      res.json({ success: true, token: token, userId: user.id });
-    } else {
-      throw new Error("User not found");
-    }
-  } catch (error) {
-    res.status(401).send({ message: false, error: error.message });
+  // Finding user in database
+  const user = await User.findOne({ where: { email: req.body.email } });
+  console.log(user);
+  console.log(req.body.password);
+  if (!user) {
+    return next(new ErrorHandler("Invalid Email or Password", 401));
   }
-};
+
+  const isPasswordMatched = bcrypt.compareSync(
+    req.body.password,
+    password,
+    user.password
+  );
+
+  if (!isPasswordMatched) {
+    return next(new ErrorHandler("Invalid Email or Password",401));
+  }
+  await user.then(() => {
+    loginToken(user, 200, res);
+  });
+});
+
 // Register a user   => /api/v1/getUser
 exports.getUser = async (req, res) => {
   const user = await User.findByPk(req.user.id);
