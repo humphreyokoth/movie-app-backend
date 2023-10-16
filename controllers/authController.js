@@ -1,26 +1,20 @@
+
+// const Op = db.Sequelize.Op;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const db = require("../sequelize");
+const User = db.user;
 
-const { User } = require("../models/user");
 
 exports.registerUser = async (req,res) => {
   try {
-    const isExist = await User.findOne({
-      where: {
-        email: req.body.email,
-      },
-    });
-    if (isExist) {
-      return res.status(400).json({ error: "Email already exists" });
-    }
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const {name,email,password} = req.body;
     const user = await User.create({
-      where: {
-        name: req.body.name,
-        email: req.body.email,
-        password: hashedPassword,
-      },
+     name,
+     email,
+     password,
+  
     });
     return res.json({
       message: "Registered successfully",
@@ -30,7 +24,7 @@ exports.registerUser = async (req,res) => {
     res.status(500).send({ message: error.message });
   }
 };
-
+// Login  of user 
 exports.login = async (req, res) => {
   try {
     const user = await User.findOne({ where: { email: req.body.email } });

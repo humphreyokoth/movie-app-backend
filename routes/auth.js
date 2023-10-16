@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const {login,registerUser} = require("../controllers/authController")
-
+const verifySignUp = require("../middlewares/verifySignup");
 
 
 // Login route
 router.route('/login').post(login);
 // Register route
-router.route('/register').post(registerUser);
+router.route('/register').post([verifySignUp.checkDuplicateUsernameOrEmail],registerUser);
 
 // Forgot password and reset password routes
 // router.route('/password/forgot').post(forgotPassword)

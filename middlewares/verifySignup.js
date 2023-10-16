@@ -1,7 +1,7 @@
 const db = require("../sequelize");
-const User = db.movie_user;
+const User = db.user;
 
-
+// Method to verify username and email
 checkDuplicateUsernameOrEmail =(req,res,next) =>{
 // Username
 User.findOne({

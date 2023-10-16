@@ -1,64 +1,61 @@
-const validator = require('validator');
+
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const Sequelize = require('sequelize');
-// const config = require('../config');
-module.exports = (sequelize,Sequelize) => {
-    const User = sequelize.define('users',{
-        id:{
-            type:Sequelize.INTEGER,
-            primaryKey:true,
-            autoIncrement:true,
-            unique:true
-        } ,
-        name:{
-            type:Sequelize.STRING,
-            allowNull:false
-        },
-        email:{
-            type:Sequelize.STRING,
-            allowNull:false
-        },
-        password:{
-            type:Sequelize.STRING,
-            allowNull:false
-        },
-        resetPasswordToken: Sequelize.STRING,
-        resetPasswordExpire: Sequelize.DATE,
-        createdAt: {
-            type: Sequelize.DATE,
-            default: Sequelize.fn('NOW')
-        },
-    })
-    // Compare user password
-    User.prototype.comparePasword = async function(enteredPassword){
-        return await bcrypt.compare(enteredPassword,this.password)
+
+module.exports = (sequelize, Sequelize) => {
+
+  const User = sequelize.define('users', {
+
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false  
+    },
+
+    email: {
+      type:Sequelize.STRING, 
+      allowNull: false,
+      unique: true,
+      validate:{
+        isEmail: true
+      }
+    },
+
+    password: {
+      type: Sequelize.STRING,
+      allowNull: false
     }
-    // Return JWT token
-    User.prototype.getJwtToken = function(){
-        return jwt.sign({where:{id:this.id}},config.secret,{
-           expiresIn:config.JWT_EXPIRES_TIME 
-        })
-    }
-    // Generate password reset token
-    User.prototype.getResetPasswordToken = function () {
-        // Generate token
-        const resetToken = crypto.randomBytes(20).toString('hex');
 
-        // Hash and set to resetPasswordToken
-        this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+  });
 
-        // Set token expire time
-        this.resetPasswordExpire = Date.now() + 30 * 60 * 1000
+  // Compare passwords
+  User.prototype.comparePassword = async function(enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+  };
 
-        return resetToken
-
-    }
-    sequelize.sync().then(() => {
-        console.log('users table created successfully!');
-    }).catch((error) => {
-        console.error('Unable to create table : ', error);
+  // Generate JWT 
+  User.prototype.getJwtToken = function() {
+    return jwt.sign({ id: this.id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE
     });
-    return User;
+  }
 
-}
+  // Hash password before save
+  User.beforeCreate(async user => {
+    user.password = await bcrypt.hash(user.password, 10);
+  });
+  
+  User.beforeUpdate(async user => {
+    if (user.changed('password')) {
+      user.password = await bcrypt.hash(user.password, 10);
+    }
+  });
+
+  return User;
+
+};
+
+

@@ -1,5 +1,5 @@
 const express = require("express");
-const seq = require("./db/db.connect")
+const db = require("./sequelize")
 const app = express();
 const cors = require("cors");
 require('dotenv').config();
@@ -33,7 +33,7 @@ app.get('/api/v1/',(req,res)=>{
 })
 
 // Sequelize
-seq()
+db.sequelize.sync()
 
 
 
