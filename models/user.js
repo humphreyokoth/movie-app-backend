@@ -31,8 +31,8 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
-    resetPasswordToken:Sequelize.STRING,
-    resetPasswordExpire:Sequelize.DATE,
+    // resetPasswordToken:Sequelize.STRING,
+    // resetPasswordExpire:Sequelize.DATE,
     createdAt:{
       type:Sequelize.DATE,
       default:Sequelize.fn("NOW"),
@@ -62,17 +62,17 @@ module.exports = (sequelize, Sequelize) => {
       expiresIn:config.JWT_EXPIRES_TIME,
     });
   }
-  // Generate JWT 
-  User.prototype.getResetPasswordToken = function(){
-    const resetToken = crypto.randomBytes(20).toString("hex");
-    this.resetPasswordToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
-     // Set token expire time
-    this.resetPasswordExpire = Date.now()+30*60*100;
-    return resetToken;
-  }
+  // // Generate JWT 
+  // User.prototype.getResetPasswordToken = function(){
+  //   const resetToken = crypto.randomBytes(20).toString("hex");
+  //   this.resetPasswordToken = crypto
+  //   .createHash("sha256")
+  //   .update(resetToken)
+  //   .digest("hex");
+  //    // Set token expire time
+  //   this.resetPasswordExpire = Date.now()+30*60*100;
+  //   return resetToken;
+  // }
   return User;
 
 };
