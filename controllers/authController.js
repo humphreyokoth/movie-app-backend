@@ -5,6 +5,8 @@ const ErrorHandler = require("../utils/errorHandler");
 require("dotenv").config();
 const db = require("../sequelize");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
+
+const loginToken = require("../utils/verifyLogin")
 const User = db.user;
 
 exports.registerUser = catchAsyncErrors(async (req, res) => {
@@ -38,16 +40,14 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
 
   const isPasswordMatched = bcrypt.compareSync(
     req.body.password,
-    password,
     user.password
   );
 
   if (!isPasswordMatched) {
     return next(new ErrorHandler("Invalid Email or Password",401));
   }
-  await user.then(() => {
-    loginToken(user, 200, res);
-  });
+  loginToken(user, 200, res);
+
 });
 
 // Register a user   => /api/v1/getUser
