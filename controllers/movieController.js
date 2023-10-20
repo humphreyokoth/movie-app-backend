@@ -16,7 +16,6 @@ exports.createMovie = catchAsyncErrors(async(req,res) =>{
  await movie.setUser(req.user);
  return res.json({
     message:"Created a movie successfully",
-    movie:movie,
-    user:user,
+    movie:movie
  })
 });
