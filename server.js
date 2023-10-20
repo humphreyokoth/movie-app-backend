@@ -13,6 +13,7 @@ const swaggerFile = require("./swagger.json");
 
 // Import all routes
 const auth = require('./routes/auth');
+const movieRoute =  require('./routes/movie.route')
 
 
 

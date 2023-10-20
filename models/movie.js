@@ -18,11 +18,15 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: true,
     },
     releaseDate: {
-      type: Sequelize.DATEONLY,
+      type: Sequelize.DATE,
       allowNull: false,
     },
     notes: {
       type: Sequelize.TEXT,
+      allowNull: true,
+    },
+    ratings:{
+      type: Sequelize.DECIMAL,
       allowNull: true,
     },
     image: {
