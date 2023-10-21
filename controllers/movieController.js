@@ -19,3 +19,20 @@ exports.createMovie = catchAsyncErrors(async(req,res) =>{
     movie:movie
  })
 });
+
+exports.getMovies = catchAsyncErrors(async(req,res)=>{
+  
+   const {movieName,genre,plot,releaseDate,notes,ratings} = req.query;
+   
+})
+exports.getMovie = catchAsyncErrors(async(req,res)=>{
+
+})
+
+exports.updateMovie = catchAsyncErrors(async(req,res)=>{
+   
+})
+
+exports.deletMovie = catchAsyncErrors(async(req,res)=>{
+
+})
