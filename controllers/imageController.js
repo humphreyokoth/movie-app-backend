@@ -2,10 +2,11 @@ const fs = require("fs");
 
 const db = require("../sequelize");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
-const Image = db.images;
+const Image = db.image;
+
 
 exports.uploadFiles = catchAsyncErrors(async (req, res) => {
-  
+
 console.log(req.file);
   if (req.file == undefined) {
     return res.send("Please select a file.");

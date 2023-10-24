@@ -25,7 +25,7 @@ const addmovieImage  = require('./routes/image');
 app.use(cors());
 // parse requests of content-type - application/json
 app.use(express.json())
-
+app.use(express.urlencoded({extended:true}));
 
 // Routes
 app.use('/api/v1/',auth);
