@@ -13,7 +13,8 @@ const swaggerFile = require("./swagger.json");
 
 // Import all routes
 const auth = require('./routes/auth');
-const movieRoute =  require('./routes/movie.route')
+const movieRoute =  require('./routes/movie');
+const addmovieImage  = require('./routes/image');
 
 
 
@@ -29,6 +30,7 @@ app.use(express.json())
 // Routes
 app.use('/api/v1/',auth);
 app.use('/api/v1/',movieRoute);
+app.use('/api/v1/',addmovieImage);
 
 // 
 app.get('/api/v1/',(req,res)=>{
