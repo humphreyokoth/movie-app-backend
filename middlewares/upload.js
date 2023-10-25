@@ -1,20 +1,23 @@
 const multer = require("multer");
+const path = require("path");
+const ErrorHandler = require("../utils/errorHandler");
 
-const imageFilter = (req,file,cb)=>{
-    if (File.mimetype.startsWith("image")) {
-      cb(null,true);  
-    }else{
-        cb("Please upload only images.",false);
-    }
-}
+const imageFilter = (req, file, cb) => {
+  let ext = path.extname(file.originalname);
+  if (ext !== ".jpg" && ext !== ".jpeg" && ext !== ".png") {
+    cb(new ErrorHandler("Unsupported file type. Use jpg, jpeg and png formats"), false);
+    return;
+  }
+  cb(null, true);
+};
 
-var storage = multer.diskStorage({
-    destination:(req,file,cb)=>{
-cb(null,__dirname + "/public/static/assets/uploads");
+const storage =  multer.diskStorage({
+    destination: "/public/images",
+    filename: (req, file, cb) => {
+      cb(null, `${Date.now()}--${file.originalname}`);
     },
-    filename:(req,file,cb)=>{
-        cb(null,`${Date.now()}-timeStamp-${file.originalname}`);
-    },
-});
-var uploadFile = multer({storage:storage,fileFilter:imageFilter})
-module.exports = uploadFile;
+   
+  })
+ 
+ const upload = multer({storage:storage,fileFilter:imageFilter})
+module.exports = upload;

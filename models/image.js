@@ -1,15 +1,11 @@
 module.exports = (sequelize, Sequelize) => {
   const Image = sequelize.define("images", {
-    id:{
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    imageName: {
+
+    name: {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    imagePath: {
+    url: {
       type: Sequelize.STRING,
       allowNull: false,
     },

@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const {uploadFiles} = require("../controllers/imageController");
-const upload = require("../middlewares/upload");
-
-
-
+const {createMovieImage} = require("../controllers/imageController");
+const uploadFile = require("../middlewares/upload");
+console.log(uploadFile);
 
 // creat image route
-router.route('/upload', upload.single("file")).post(uploadFiles);
+router.post('/addimage', uploadFile.single("image"),createMovieImage);
+
 
 module.exports = router;

@@ -1,28 +1,19 @@
-const fs = require("fs");
-
 const db = require("../sequelize");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const Image = db.image;
+console.log(Image,"############");
 
+exports.createMovieImage = catchAsyncErrors(async (req, res) => {
 
-exports.uploadFiles = catchAsyncErrors(async (req, res) => {
-
-console.log(req.file);
-  if (req.file == undefined) {
+  if (!req.file) {
     return res.send("Please select a file.");
   }
-  const { mimetype, originalname, filename } = req.file;
-  const image = await Image.create({
-    type: mimetype,
+  const {originalname} = req.file;
+   const image = await Image.create({
     name: originalname,
-    data: fs.readFileSync(
-      __basedir + "/public/static/assets/uploads" + filename
-    ),
+    url:req.file.path
   });
-  fs.writeFileSync(
-    __basedir + "/public/static/assets/uploads/" + image.name,
-    image.data
-  );
+  
   return res.json({
     message: "File has been uploaded successfully",
     image: image,
