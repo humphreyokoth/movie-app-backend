@@ -65,7 +65,7 @@ exports.updateMovie = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.deletMovie = catchAsyncErrors(async (req, res,next) => {
-  const movie = await Movie.findByPk(req.params.id);
+  const movie = await Movie.findByPk(req.query.id);
   if (!movie) {
     return next(new ErrorHandler("Movie not found", 404));
   }
