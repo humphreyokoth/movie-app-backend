@@ -5,7 +5,7 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const Movie = db.movie;
 const User = db.user;
 const {Sequelize} = require('sequelize');
-console.log(User);
+console.log(Movie);
 
 exports.createMovie = catchAsyncErrors(async(req,res) =>{
   const user = req.user;
@@ -21,11 +21,18 @@ exports.createMovie = catchAsyncErrors(async(req,res) =>{
 });
 
 exports.getMovies = catchAsyncErrors(async(req,res)=>{
-  
-   const {movieName,genre,plot,releaseDate,notes,ratings} = req.query;
+
+   const getMovieList = await Movie.findAll();
+   return res.json({
+      message:"List of movies",
+      getMovieList
+
+   })
    
 })
 exports.getMovie = catchAsyncErrors(async(req,res)=>{
+   const id = req.params.id;
+   const movie = await movies
 
 })
 

@@ -16,5 +16,5 @@ cb(null,__dirname + "/public/static/assets/uploads");
         cb(null,`${Date.now()}-timeStamp-${file.originalname}`);
     },
 });
-const uploadFile = multer({storage:storage,fileFilter:imageFilter})
+var uploadFile = multer({storage:storage,fileFilter:imageFilter})
 module.exports = uploadFile;

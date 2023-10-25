@@ -30,7 +30,8 @@ app.use(express.urlencoded({extended:true}));
 // Routes
 app.use('/api/v1/',auth);
 app.use('/api/v1/',movieRoute);
-app.use('/api/v1/',addmovieImage);
+// app.use('/api/v1/',addmovieImage);
+// app.use('api/v1/',getallmovies);
 
 // 
 app.get('/api/v1/',(req,res)=>{
