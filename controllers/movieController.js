@@ -6,7 +6,6 @@ const Movie = db.movie;
 const User = db.user;
 const { Sequelize } = require("sequelize");
 
-
 exports.createMovie = catchAsyncErrors(async (req, res) => {
   const user = req.user;
   const { movieName, genre, plot, releaseDate, notes, ratings } = req.body;
@@ -25,6 +24,7 @@ exports.createMovie = catchAsyncErrors(async (req, res) => {
   });
 });
 
+// Get all movies details   =>   /api/v1/movies;
 exports.getMovies = catchAsyncErrors(async (req, res) => {
   const getMovieList = await Movie.findAll();
   return res.json({
@@ -32,13 +32,14 @@ exports.getMovies = catchAsyncErrors(async (req, res) => {
     getMovieList,
   });
 });
-
+// Get single movie details   =>   /api/v1/movie/:id
 exports.getMovie = catchAsyncErrors(async (req, res, next) => {
-   // + used to query an integer
-  const id = +req.query.id;  
-  const movie = await Movie.findByPk(id); 
+  // + used to query  an integer
+  const id = +req.query.id;
+  console.log(id);
+  const movie = await Movie.findByPk(id);
   if (!movie) {
-    return next(new ErrorHandler("Movie Not found",404));
+    return next(new ErrorHandler("Movie Not found", 404));
   }
   res.status(200).json({
     success: true,
@@ -46,6 +47,32 @@ exports.getMovie = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-exports.updateMovie = catchAsyncErrors(async (req, res) => {});
+exports.updateMovie = catchAsyncErrors(async (req, res, next) => {
+  const id = req.query.id;
+   let movie = await Movie.findByPk(id);
+  if (!movie) {
+    return next(new ErrorHandler("Movie not found", 404));
+  }
+  movie = await Movie.update(
+   req.body,{
+    where:{id:id},  
+   }
+   );
+  res.status(200).json({
+    success: true,
+    message: "Movie updated successfully",
+  });
+});
 
-exports.deletMovie = catchAsyncErrors(async (req, res) => {});
+exports.deletMovie = catchAsyncErrors(async (req, res,next) => {
+  const movie = await Movie.findByPk(req.params.id);
+  if (!movie) {
+    return next(new ErrorHandler("Movie not found", 404));
+  }
+  await movie.destroy();
+
+  res.status(200).json({
+    success: true,
+    message: "Movie deleted successfully",
+  });
+});
