@@ -46,7 +46,7 @@ exports.getMovie = catchAsyncErrors(async (req, res, next) => {
     movie,
   });
 });
-
+// update movie => /api/v1/update/movie/:id
 exports.updateMovie = catchAsyncErrors(async (req, res, next) => {
   const id = req.query.id;
    let movie = await Movie.findByPk(id);
@@ -64,6 +64,7 @@ exports.updateMovie = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// delete movie => /api/v1/delete/movie/:id
 exports.deletMovie = catchAsyncErrors(async (req, res,next) => {
   const movie = await Movie.findByPk(req.query.id);
   if (!movie) {
