@@ -9,14 +9,13 @@ const { Op } = require("sequelize");
 const axios = require("axios");
 
 exports.createMovie = catchAsyncErrors(async (req, res) => {
-
   const user = req.user;
   const { title, genre, plot, releaseDate, notes, ratings } = req.body;
 
   // Fetch movie details from OMDB
-  const omdbApiKey = process.env.omdbApiKey; 
+  const omdbApiKey = process.env.omdbApiKey;
   const omdbUrl = `http://www.omdbapi.com/?t=${title}&apikey=${omdbApiKey}`;
-  
+
   const omdbResponse = await axios.get(omdbUrl);
 
   // Initialize IMDB rating
@@ -30,28 +29,26 @@ exports.createMovie = catchAsyncErrors(async (req, res) => {
       // Use provided rating if higher
       imdbRating = ratings.imdb;
     }
-
   } else {
-    console.log("No valid IMDB rating returned from OMDB"); 
+    console.log("No valid IMDB rating returned from OMDB");
   }
 
   // Create movie with integrated IMDB rating
   const movie = await Movie.create({
-    title, 
+    title,
     genre,
     plot,
     releaseDate,
     notes,
-    ratings: {imdb: imdbRating}
+    ratings: { imdb: imdbRating },
   });
 
   await movie.setUser(user);
 
   res.json({
     message: "Created movie successfully",
-    movie
+    movie,
   });
-
 });
 
 // Get all movies details   =>   /api/v1/movies;
@@ -66,18 +63,24 @@ exports.getMovies = catchAsyncErrors(async (req, res) => {
 // search movie by title
 
 exports.searchMovies = catchAsyncErrors(async (req, res) => {
-  
-  const {title} = req.query;
+  const { title } = req.query;
 
-  const movies = await Movie.findOne(
-    { where: {
-       title: title } 
+  const movies = await Movie.findOne({
+    where: {
+      title: title,
+    },
+  });
+  if (!movies) {
+    return res.status(404).json({
+      success: false,
+      message: "Movie not found",
     });
+  }
   res.json({
-    message:"Returned search movie",
-    movies});
-
-})
+    message: "Returned search movie",
+    movies,
+  });
+});
 // Get single movie details   =>   /api/v1/movie/:id
 exports.getMovie = catchAsyncErrors(async (req, res, next) => {
   // + used to query  an integer
