@@ -59,7 +59,31 @@ exports.getMovies = catchAsyncErrors(async (req, res) => {
     getMovieList,
   });
 });
+// moviesController.js
 
+
+// Return to 10 favourite movies through pagination
+exports.getFavouriteMovies = catchAsyncErrors(async (req, res) => {
+  const PAGE_SIZE = 10;
+  const { page = 1 } = req.query;
+
+  const offset = (page - 1) * PAGE_SIZE;
+
+  const movies = await Movie.findAll({
+    limit: PAGE_SIZE,
+    offset: offset 
+  });
+
+  const favouriteMovies = await Movie.count();
+  
+  const pageCount = Math.ceil(favouriteMovies / PAGE_SIZE);
+
+  res.json({
+    movies,
+    pageCount
+  });
+
+});
 // search movie by title
 
 exports.searchMovies = catchAsyncErrors(async (req, res) => {
