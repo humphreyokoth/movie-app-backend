@@ -8,42 +8,49 @@ const { Sequelize } = require("sequelize");
 const axios = require("axios");
 
 exports.createMovie = catchAsyncErrors(async (req, res) => {
+
   const user = req.user;
   const { title, genre, plot, releaseDate, notes, ratings } = req.body;
 
-  // Create the movie without ratings for now
+  // Fetch movie details from OMDB
+  const omdbApiKey = process.env.omdbApiKey; 
+  const omdbUrl = `http://www.omdbapi.com/?t=${title}&apikey=${omdbApiKey}`;
+  
+  const omdbResponse = await axios.get(omdbUrl);
+
+  // Initialize IMDB rating
+  let imdbRating = null;
+
+  if (omdbResponse.data.Response === "True" && omdbResponse.data.imdbRating) {
+    imdbRating = parseFloat(omdbResponse.data.imdbRating);
+
+    // Compare IMDB rating with provided rating
+    if (ratings?.imdb && imdbRating !== null && ratings.imdb >= imdbRating) {
+      // Use provided rating if higher
+      imdbRating = ratings.imdb;
+    }
+
+  } else {
+    console.log("No valid IMDB rating returned from OMDB"); 
+  }
+
+  // Create movie with integrated IMDB rating
   const movie = await Movie.create({
-    title,
+    title, 
     genre,
     plot,
     releaseDate,
     notes,
-    ratings,
+    ratings: {imdb: imdbRating}
   });
 
-  // Compare ratings
-  const omdbApiKey = process.env.omdbApiKey;
-  const omdbUrl = `http://www.omdbapi.com/?t=${title}&apikey=${omdbApiKey}`;
+  await movie.setUser(user);
 
-  const omdbResponse = await axios.get(omdbUrl);
-
-  if (omdbResponse.data.Response === "True" && omdbResponse.data.imdbRating) {
-    const imdbRating = parseFloat(omdbResponse.data.imdbRating);
-
-    //  Update ratings
-    await movie.update({ ratings: { imdb: imdbRating } });
-  } else {
-    // when ratings is not there
-    console.log("OMDB API did not return a valid rating for the movie.");
-  }
-
-  // Set the user for the created movie
-  await movie.setUser(req.user);
-
-  return res.json({
-    message: "Created a movie successfully",
-    movie: movie,
+  res.json({
+    message: "Created movie successfully",
+    movie
   });
+
 });
 
 // Get all movies details   =>   /api/v1/movies;
