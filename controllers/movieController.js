@@ -5,6 +5,7 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const Movie = db.movie;
 const User = db.user;
 const { Sequelize } = require("sequelize");
+const { Op } = require("sequelize");
 const axios = require("axios");
 
 exports.createMovie = catchAsyncErrors(async (req, res) => {
@@ -61,6 +62,22 @@ exports.getMovies = catchAsyncErrors(async (req, res) => {
     getMovieList,
   });
 });
+
+// search movie by title
+
+exports.searchMovies = catchAsyncErrors(async (req, res) => {
+  
+  const {title} = req.query;
+
+  const movies = await Movie.findOne(
+    { where: {
+       title: title } 
+    });
+  res.json({
+    message:"Returned search movie",
+    movies});
+
+})
 // Get single movie details   =>   /api/v1/movie/:id
 exports.getMovie = catchAsyncErrors(async (req, res, next) => {
   // + used to query  an integer
