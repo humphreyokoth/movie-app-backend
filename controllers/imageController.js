@@ -19,3 +19,18 @@ exports.createMovieImage = catchAsyncErrors(async (req, res) => {
     image: image,
   });
 });
+
+// Get single image details   =>   /api/v1/movie/:id
+exports.getImage = catchAsyncErrors(async (req, res, next) => {
+  // + used to query  an integer
+  const id = +req.query.id;
+  console.log(id);
+  const image = await Image.findByPk(id);
+  if (!image) {
+    return next(new ErrorHandler("Image  Not found", 404));
+  }
+  res.status(200).json({
+    success: true,
+    image,
+  });
+});

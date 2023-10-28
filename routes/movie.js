@@ -5,9 +5,9 @@ const {createMovie, getMovies, getMovie, updateMovie, deletMovie} = require("../
 
 // Create movie route
 router.route('/addmovie').post(createMovie);
-router.route('/get-all-movies').get(getMovies);
-router.route('/getMovie').get(getMovie);
-router.route('/updateMovie').put(updateMovie);
-router.route('/deleteMovie').delete(deletMovie);
+router.route('/getmovies').get(getMovies);
+router.route('/getmovie').get(getMovie);
+router.route('/updatemovie').put(updateMovie);
+router.route('/deletemovie').delete(deletMovie);
 
 module.exports = router;

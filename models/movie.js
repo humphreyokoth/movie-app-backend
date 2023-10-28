@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    movieName: {
+    title: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -26,7 +26,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: true,
     },
     ratings:{
-      type: Sequelize.DECIMAL,
+      type: Sequelize.JSON,
       allowNull: true,
     },
     image: {

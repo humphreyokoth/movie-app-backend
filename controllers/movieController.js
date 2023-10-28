@@ -5,19 +5,41 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const Movie = db.movie;
 const User = db.user;
 const { Sequelize } = require("sequelize");
+const axios = require("axios");
 
 exports.createMovie = catchAsyncErrors(async (req, res) => {
   const user = req.user;
-  const { movieName, genre, plot, releaseDate, notes, ratings } = req.body;
+  const { title, genre, plot, releaseDate, notes, ratings } = req.body;
+
+  // Create the movie without ratings for now
   const movie = await Movie.create({
-    movieName,
+    title,
     genre,
     plot,
     releaseDate,
     notes,
     ratings,
   });
+
+  // Compare ratings
+  const omdbApiKey = process.env.omdbApiKey;
+  const omdbUrl = `http://www.omdbapi.com/?t=${title}&apikey=${omdbApiKey}`;
+
+  const omdbResponse = await axios.get(omdbUrl);
+
+  if (omdbResponse.data.Response === "True" && omdbResponse.data.imdbRating) {
+    const imdbRating = parseFloat(omdbResponse.data.imdbRating);
+
+    //  Update ratings
+    await movie.update({ ratings: { imdb: imdbRating } });
+  } else {
+    // when ratings is not there
+    console.log("OMDB API did not return a valid rating for the movie.");
+  }
+
+  // Set the user for the created movie
   await movie.setUser(req.user);
+
   return res.json({
     message: "Created a movie successfully",
     movie: movie,
@@ -49,15 +71,13 @@ exports.getMovie = catchAsyncErrors(async (req, res, next) => {
 // update movie => /api/v1/update/movie/:id
 exports.updateMovie = catchAsyncErrors(async (req, res, next) => {
   const id = req.query.id;
-   let movie = await Movie.findByPk(id);
+  let movie = await Movie.findByPk(id);
   if (!movie) {
     return next(new ErrorHandler("Movie not found", 404));
   }
-  movie = await Movie.update(
-   req.body,{
-    where:{id:id},  
-   }
-   );
+  movie = await Movie.update(req.body, {
+    where: { id: id },
+  });
   res.status(200).json({
     success: true,
     message: "Movie updated successfully",
@@ -65,7 +85,7 @@ exports.updateMovie = catchAsyncErrors(async (req, res, next) => {
 });
 
 // delete movie => /api/v1/delete/movie/:id
-exports.deletMovie = catchAsyncErrors(async (req, res,next) => {
+exports.deletMovie = catchAsyncErrors(async (req, res, next) => {
   const movie = await Movie.findByPk(req.query.id);
   if (!movie) {
     return next(new ErrorHandler("Movie not found", 404));

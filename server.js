@@ -28,6 +28,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.static('public'));
 app.use('/public/images', express.static(__dirname + '/public/images'));
 
+
 // Routes
 app.use('/api/v1/',auth);
 app.use('/api/v1/',movieRoutes);
