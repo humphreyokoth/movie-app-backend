@@ -77,7 +77,7 @@ exports.searchMovies = catchAsyncErrors(async (req, res) => {
     });
   }
   res.json({
-    message: "Returned search movie",
+    message: "Movie found successfully",
     movies,
   });
 });
