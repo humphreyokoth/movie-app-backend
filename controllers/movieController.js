@@ -2,7 +2,9 @@ const ErrorHandler = require("../utils/errorHandler");
 require("dotenv").config();
 const db = require("../sequelize");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
+const{createMovieImage} = require("./imageController");
 const Movie = db.movie;
+const Image = db.image;
 const User = db.user;
 const { Sequelize } = require("sequelize");
 const { Op } = require("sequelize");
@@ -45,7 +47,7 @@ exports.createMovie = catchAsyncErrors(async (req, res) => {
 
   await movie.setUser(user);
 
-  res.json({
+  res.status(200).json({
     message: "Created movie successfully",
     movie,
   });
@@ -54,12 +56,12 @@ exports.createMovie = catchAsyncErrors(async (req, res) => {
 // Get all movies details   =>   /api/v1/movies;
 exports.getMovies = catchAsyncErrors(async (req, res) => {
   const getMovieList = await Movie.findAll();
-  return res.json({
+  return res.status(200).json({
     message: "List of movies",
     getMovieList,
   });
 });
-// moviesController.js
+
 
 
 // Return to 10 favourite movies through pagination
@@ -78,7 +80,7 @@ exports.getFavouriteMovies = catchAsyncErrors(async (req, res) => {
   
   const pageCount = Math.ceil(favouriteMovies / PAGE_SIZE);
 
-  res.json({
+  res.status(200).json({
     movies,
     pageCount
   });

@@ -33,9 +33,11 @@ db.image = require("./models/image")(sequelize,Sequelize);
 // Define associations
 db.user.hasMany(db.movie);
 db.movie.belongsTo(db.user);
-db.movie.hasMany(db.image);
-db.image.belongsTo(db.movie);
+// db.movie.hasMany(db.image);
+// db.image.belongsTo(db.movie);
 
+db.movie.hasMany(db.image, { foreignKey: 'movieId' });
+db.image.belongsTo(db.movie, { foreignKey: 'movieId' });
 
 
 sequelize
