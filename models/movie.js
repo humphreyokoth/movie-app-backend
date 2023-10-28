@@ -28,11 +28,7 @@ module.exports = (sequelize, Sequelize) => {
     ratings:{
       type: Sequelize.JSON,
       allowNull: true,
-    },
-    imageId: {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-    },
+    }
   });
   return Movie;
 };

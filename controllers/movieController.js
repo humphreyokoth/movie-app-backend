@@ -2,9 +2,7 @@ const ErrorHandler = require("../utils/errorHandler");
 require("dotenv").config();
 const db = require("../sequelize");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
-const{createMovieImage} = require("./imageController");
 const Movie = db.movie;
-const Image = db.image;
 const User = db.user;
 const { Sequelize } = require("sequelize");
 const { Op } = require("sequelize");
@@ -58,7 +56,7 @@ exports.getMovies = catchAsyncErrors(async (req, res) => {
   const getMovieList = await Movie.findAll();
   return res.status(200).json({
     message: "List of movies",
-    getMovieList,
+    getMovieList:getMovieList
   });
 });
 
