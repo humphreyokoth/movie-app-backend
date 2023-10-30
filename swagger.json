@@ -78,7 +78,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "movieName": {
+                "title": {
                   "example": "any"
                 },
                 "genre": {
@@ -107,7 +107,7 @@
         }
       }
     },
-    "/get-all-movies": {
+    "/getmovies": {
       "get": {
         "description": "",
         "responses": {
@@ -117,7 +117,7 @@
         }
       }
     },
-    "/getMovie": {
+    "/getmovie": {
       "get": {
         "description": "",
         "parameters": [
@@ -134,7 +134,27 @@
         }
       }
     },
-    "/updateMovie": {
+    "/searchmovie": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/updatemovie": {
       "put": {
         "description": "",
         "parameters": [
@@ -151,7 +171,7 @@
         }
       }
     },
-    "/deleteMovie": {
+    "/deletemovie": {
       "delete": {
         "description": "",
         "parameters": [
@@ -168,12 +188,89 @@
         }
       }
     },
-    "/upload": {
-      "post": {
+    "/favouritemovies": {
+      "get": {
         "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/addimage": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "movieId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/getimage/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/getImages": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/updateimage/{id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
           }
         }
       }
