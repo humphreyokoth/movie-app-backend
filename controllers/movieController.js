@@ -4,6 +4,7 @@ const db = require("../sequelize");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const Movie = db.movie;
 const User = db.user;
+const Image = db.image;
 const { Sequelize } = require("sequelize");
 const { Op } = require("sequelize");
 const axios = require("axios");
@@ -56,11 +57,36 @@ exports.getMovies = catchAsyncErrors(async (req, res) => {
   const getMovieList = await Movie.findAll();
   return res.status(200).json({
     message: "List of movies",
-    getMovieList:getMovieList
+    getMovieList: getMovieList,
   });
 });
+// Get all movies with their images
+exports.getMovieImages = catchAsyncErrors(async (req, res,next) => {
+  const id = +req.params.id;
+  const movie = await Movie.findByPk(id, {
+    include: [
+      {
+        model: Image,
+        as: "images",
+      },
+    ],
+  });
+  if (!movie) {
+    return next ("Movie not found",404);
+  }
+  const imageUrls = [];
 
-
+  if (movie && movie.images) {
+    movie.images.forEach((image) => {
+      const imageUrl = `/images/${image.url}`;
+      imageUrls.push(imageUrl);
+    });
+  }
+  res.status(200).json({
+    movie,
+    imageUrls,
+  });
+});
 
 // Return to 10 favourite movies through pagination
 exports.getFavouriteMovies = catchAsyncErrors(async (req, res) => {
@@ -71,18 +97,17 @@ exports.getFavouriteMovies = catchAsyncErrors(async (req, res) => {
 
   const movies = await Movie.findAll({
     limit: PAGE_SIZE,
-    offset: offset 
+    offset: offset,
   });
 
   const favouriteMovies = await Movie.count();
-  
+
   const pageCount = Math.ceil(favouriteMovies / PAGE_SIZE);
 
   res.status(200).json({
     movies,
-    pageCount
+    pageCount,
   });
-
 });
 // search movie by title
 
