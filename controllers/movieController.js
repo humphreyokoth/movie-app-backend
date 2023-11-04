@@ -88,6 +88,30 @@ exports.getMovieImages = catchAsyncErrors(async (req, res,next) => {
   });
 });
 
+// Get Movies with images
+exports.getAllMoviesImage = catchAsyncErrors(async (req, res, next) => {
+
+  const movies = await Movie.findAll({
+    include: [
+      { 
+        model: Image,
+        as: 'images'
+      }
+    ]
+  });
+  const moviesWithImages = movies.map(movie => {
+    const { id, title, genre, plot, releaseDate, notes, ratings } = movie;
+    const imageUrls = (movie.images || []).map(image => `/images/${image.url}`);
+    
+    return { id, title, genre, plot, releaseDate, notes, ratings, imageUrls };
+  });
+  
+  res.status(200).json({
+    success: true,
+    movies: moviesWithImages 
+  });
+
+});
 // Return to 10 favourite movies through pagination
 exports.getFavouriteMovies = catchAsyncErrors(async (req, res) => {
   const PAGE_SIZE = 10;
