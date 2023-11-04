@@ -72,7 +72,7 @@ exports.getMovieImages = catchAsyncErrors(async (req, res,next) => {
     ],
   });
   if (!movie) {
-    return next ("Movie not found",404);
+    return next ("Movie not found",404)
   }
   const imageUrls = [];
 
