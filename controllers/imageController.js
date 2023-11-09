@@ -8,12 +8,14 @@ exports.createMovieImage = catchAsyncErrors(async (req, res) => {
     return res.send("Please select a file.");
   }
   const { originalname } = req.file;
+  let url = req.file.path;
+  url = url.replace(/\\/g,'/');
   const image = await Image.create({
     name: originalname,
-    url: req.file.path,
+    url,
     movieId: req.body.movieId,
   });
-
+console.log(image.url);
   return res.json({
     message: "File has been uploaded successfully",
     image: image,

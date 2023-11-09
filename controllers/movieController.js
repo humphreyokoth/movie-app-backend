@@ -78,7 +78,7 @@ exports.getMovieImages = catchAsyncErrors(async (req, res,next) => {
 
   if (movie && movie.images) {
     movie.images.forEach((image) => {
-      const imageUrl = `/images/${image.url}`;
+      const imageUrl = `public/${image.url}`;
       imageUrls.push(imageUrl);
     });
   }
@@ -101,7 +101,7 @@ exports.getAllMoviesImage = catchAsyncErrors(async (req, res, next) => {
   });
   const moviesWithImages = movies.map(movie => {
     const { id, title, genre, plot, releaseDate, notes, ratings } = movie;
-    const imageUrls = (movie.images || []).map(image => `/images/${image.url}`);
+    const imageUrls = (movie.images || []).map(image => ''+ image.url);
     
     return { id, title, genre, plot, releaseDate, notes, ratings, imageUrls };
   });

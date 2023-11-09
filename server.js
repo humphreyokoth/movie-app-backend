@@ -3,6 +3,7 @@ const db = require("./sequelize")
 const app = express();
 const cors = require("cors");
 require('dotenv').config();
+const path = require('path');
 // swagger config
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger.json");
@@ -25,8 +26,9 @@ app.use(express.urlencoded({extended:true}));
 
 
 // Middleware for serving static files(images).
-app.use(express.static('public'));
-app.use('/public/images', express.static(__dirname + '/public/images'));
+// app.use(express.static('public'));
+// app.use('/api/v1/public', express.static(__dirname + 'public'));
+app.use('/api/v1/public/:image', express.static(path.join(__dirname, 'public/images')));
 
 
 // Routes

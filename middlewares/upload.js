@@ -4,17 +4,20 @@ const ErrorHandler = require("../utils/errorHandler");
 
 const imageFilter = (req, file, cb) => {
   let ext = path.extname(file.originalname);
-  if (ext !== ".jpg" && ext !== ".jpeg" && ext !== ".png") {
-    cb(new ErrorHandler("Unsupported file type. Use jpg, jpeg and png formats"), false);
+  if (ext !== ".jpg" && ext !== ".jpeg" && ext !== ".png"&& ext !== ".heic" && ext !== ".JPG") {
+    cb(new ErrorHandler("Unsupported file type. Use jpg, jpeg,heic,JPG, and png formats"), false);
     return;
   }
   cb(null, true);
 };
 
 const storage =  multer.diskStorage({
-    destination: "images",
+  
+    destination: "public/images",
+
     filename: (req, file, cb) => {
-      cb(null, `${Date.now()}--${file.originalname}`);
+      const fileName  = file.originalname.replace(/\\/g,'/')
+      cb(null, `${Date.now()}--${fileName}`);
     },
    
   })
