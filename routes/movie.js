@@ -11,9 +11,9 @@ const {
   getMovieImages,
   getAllMoviesImage,
 } = require("../controllers/movieController");
+const uploadFile = require("../middlewares/upload");
 
-// Create movie route
-router.route("/addmovie").post(createMovie);
+router.post("/addmovie", uploadFile.single("image"), createMovie);
 router.route("/getmovies").get(getMovies);
 router.route("/getmovie").get(getMovie);
 router.route("/searchmovie").get(searchMovies);

@@ -11,7 +11,14 @@ const axios = require("axios");
 
 exports.createMovie = catchAsyncErrors(async (req, res) => {
   const user = req.user;
-  const { title, genre, plot, releaseDate, notes, ratings } = req.body;
+ 
+  if (!req.file) {
+    return res.send("Please select a file.");
+  }
+  const { originalname } = req.file;
+  const imageUrl = originalname ? req.file.path.replace(/\\/g, '/') : null;
+ 
+  const {title, genre, plot, releaseDate, notes, ratings } = req.body;
 
   // Fetch movie details from OMDB
   const omdbApiKey = process.env.omdbApiKey;
@@ -33,9 +40,10 @@ exports.createMovie = catchAsyncErrors(async (req, res) => {
   } else {
     console.log("No valid IMDB rating returned from OMDB");
   }
-
+ 
   // Create movie with integrated IMDB rating
   const movie = await Movie.create({
+    imageUrl,
     title,
     genre,
     plot,
@@ -66,7 +74,7 @@ exports.getMovieImages = catchAsyncErrors(async (req, res,next) => {
   const movie = await Movie.findByPk(id, {
     include: [
       {
-        model: Image,
+        model: Movie,
         as: "images",
       },
     ],
@@ -94,7 +102,7 @@ exports.getAllMoviesImage = catchAsyncErrors(async (req, res, next) => {
   const movies = await Movie.findAll({
     include: [
       { 
-        model: Image,
+        model: Movie,
         as: 'images'
       }
     ]

@@ -5,6 +5,10 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    imageUrl:{
+      type:Sequelize.STRING,
+      allowNull: true,
+    },
     title: {
       type: Sequelize.STRING,
       allowNull: false,
